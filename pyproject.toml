@@ -5,7 +5,9 @@ description = "Add your description here"
 authors = [
     { name = "MURAKI Taichi", email = "muraki.taichi@gmail.com" }
 ]
-dependencies = []
+dependencies = [
+    "torch>=2.0.1",
+]
 readme = "README.md"
 requires-python = ">= 3.8"
 
