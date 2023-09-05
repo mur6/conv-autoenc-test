@@ -60,6 +60,8 @@ def main():
     iterator = iter(trainloader)
     x, y = next(iterator)
     print(y)
+    masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
+    print(masks.shape)
 
 
 if __name__ == "__main__":
