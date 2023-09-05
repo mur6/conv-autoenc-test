@@ -61,7 +61,9 @@ def main():
     x, y = next(iterator)
     print(y)
     masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
-    print(masks.shape)
+    masks_train_loader = DataLoader(masks, batch_size=batch_size, shuffle=True)
+    for m in masks_train_loader:
+        print(m.shape)
 
 
 if __name__ == "__main__":
