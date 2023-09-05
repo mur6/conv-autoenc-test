@@ -56,6 +56,15 @@ class AutoEncoder2(torch.nn.Module):
         return x
 
 
+import albumentations as A
+
+transform = A.Compose([
+    A.RandomCrop(width=256, height=256),
+    A.HorizontalFlip(p=0.5),
+    A.RandomBrightnessContrast(p=0.2),
+])
+
+
 def main():
     iterator = iter(trainloader)
     x, y = next(iterator)
@@ -63,7 +72,12 @@ def main():
     masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
     masks_train_loader = DataLoader(masks, batch_size=batch_size, shuffle=True)
     for m in masks_train_loader:
-        print(m.shape)
+        print(m[0].shape)
+        print(m[0])
+        im = m[0]
+        plt.imshow(im)
+        break
+    plt.show()
 
 
 if __name__ == "__main__":
