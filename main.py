@@ -54,3 +54,11 @@ class AutoEncoder2(torch.nn.Module):
         x = self.enc(x)
         x = self.dec(x)
         return x
+
+
+def main():
+    conv1 = torch.nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3, padding=1)
+    conv2 = torch.nn.Conv2d(in_channels=16, out_channels=8, kernel_size=3, padding=1)
+    pool = torch.nn.MaxPool2d(2)
+
+main()
