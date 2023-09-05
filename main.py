@@ -95,4 +95,7 @@ def main():
     EPOCHS = 100
 
     output_and_label, losses = train(net, criterion, optimizer, EPOCHS, trainloader)
-main()
+
+
+if __name__ == "__main__":
+    main()
