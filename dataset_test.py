@@ -1,4 +1,5 @@
 from pathlib import Path
+import random
 
 import torch
 from torch import nn
@@ -34,7 +35,10 @@ def main():
     #     # print(m[0])
     #     im = m[0]
     #     im = transform(im.unsqueeze(0))
-    im = masks[0]
+    num = masks.shape[0]
+    index = random.randint(0, num - 1)
+    print(num, index)
+    im = masks[index]
     # print(masks_np)
     plt.imshow(im.squeeze(0))
     plt.show()
