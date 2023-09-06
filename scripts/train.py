@@ -60,11 +60,19 @@ class Autoencoder(nn.Module):
 
         # Encoder layers
         self.encoder = nn.Sequential(
+            # conv1
             nn.Conv2d(1, 32, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm2d(32),
             nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            # conv2
             nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            # conv3
             nn.Conv2d(64, 128, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm2d(128),
             nn.ReLU(),
         )
 
@@ -72,18 +80,20 @@ class Autoencoder(nn.Module):
         self.decoder = nn.Sequential(
             nn.ConvTranspose2d(128, 64, kernel_size=3, stride=2, padding=1),
             nn.ReLU(),
+            # nn.Upsample(scale_factor=2, mode='bilinear'),
             nn.ConvTranspose2d(
-                64, 32, kernel_size=3, stride=2, padding=1, output_padding=1
-            ),
+                64, 32, kernel_size=3, stride=2),
             nn.ReLU(),
-            nn.ConvTranspose2d(
-                32, 1, kernel_size=3, stride=2, padding=1, output_padding=1
-            ),
+            nn.Upsample(scale_factor=2, mode='bilinear'),
+            # nn.ConvTranspose2d(
+            #     32, 1, kernel_size=3, stride=2
+            # ),
             nn.Sigmoid(),  # Output values between 0 and 1 for binary images
         )
 
     def forward(self, x):
         x = self.encoder(x)
+        print(f"x={x.shape}")
         x = self.decoder(x)
         return x
 
@@ -148,7 +158,7 @@ def main():
 
     # Create a directory to save checkpoints
     checkpoint_dir = Path("checkpoints")
-    checkpoint_dir.makedirs(checkpoint_dir, exist_ok=True)
+    checkpoint_dir.mkdir(exist_ok=True)
 
     # Training loop
     for epoch in range(epochs):
@@ -157,11 +167,12 @@ def main():
 
             img = img.to(device)
             label_img = label_img.to(device)
-            # print(f"img={img.shape} {img.dtype}")
-            # print(f"output_image={output_image.shape} {output_image.dtype}")
+            print(f"img={img.shape} {img.dtype}")
+            print(f"output_image={label_img.shape} {label_img.dtype}")
 
             # Forward pass
             output = model(img)
+            print(f"output={output.shape} {output.dtype}")
             loss = criterion(output, label_img)
 
             # Backpropagation and optimization
@@ -175,6 +186,7 @@ def main():
         if (epoch + 1) % 20 == 0:
             checkpoint_path = checkpoint_dir / f"autoencoder_epoch{epoch + 1}.pth"
             torch.save(model.state_dict(), checkpoint_path)
+            print(f"Saved: {checkpoint_path}")
 
         print(f"Epoch [{epoch + 1}/{epochs}] Loss: {total_loss / len(train_loader)}")
 
