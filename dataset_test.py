@@ -18,8 +18,6 @@ from albumentations.pytorch import ToTensorV2
 import torchvision.transforms as T
 from torchvision.transforms import v2
 
-import torchvision.transforms.v2 as transforms
-
 
 transforms = v2.Compose(
     [v2.RandomZoomOut(side_range=(1, 2.5), p=1.0), v2.Resize((96, 96))]
