@@ -49,23 +49,23 @@ def test():
 
 
 def augments_data(orig_img):
-    return [zoomout(orig_img.unsqueeze(0)) for _ in range(4)]
+    return [transforms(orig_img.unsqueeze(0)) for _ in range(4)]
 
 
 def main():
     masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
     def _iter():
         for orig_img in masks:
-            yield orig_img
+            yield orig_img.unsqueeze(0)
             yield from augments_data(orig_img)
-    images = list(_iter())
-    images = torch.stack(images)
-    print(images[0].shape)
-    # fig, axes = plt.subplots(2, 2, figsize=(9, 9), tight_layout=True)
-    # for ax, img in zip(axes.flatten(), images):
-    #     # ax.imshow(img.permute(1, 2, 0))
-    #     ax.imshow(img.squeeze(0))
-    # plt.show()
+    image_list = list(_iter())
+    images = torch.cat(image_list, dim=0)
+    print(images.shape)
+    fig, axes = plt.subplots(2, 2, figsize=(9, 9), tight_layout=True)
+    for ax, img in zip(axes.flatten(), images):
+        # ax.imshow(img.permute(1, 2, 0))
+        ax.imshow(img.squeeze(0))
+    plt.show()
 
 
 if __name__ == "__main__":
