@@ -140,8 +140,6 @@ def main():
     # Set up training parameters
     learning_rate = 0.001
     epochs = 50
- 
-
 
     # Initialize the autoencoder and optimizer
     model = Autoencoder().to(device)
@@ -149,12 +147,38 @@ def main():
     criterion = nn.BCELoss()  # Binary Cross-Entropy Loss
 
     # Create a directory to save checkpoints
-    checkpoint_dir = 'checkpoints'
-    # os.makedirs(checkpoint_dir, exist_ok=True)
+    checkpoint_dir = Path("checkpoints")
+    checkpoint_dir.makedirs(checkpoint_dir, exist_ok=True)
 
+    # Training loop
+    for epoch in range(epochs):
+        total_loss = 0
+        for img, label_img in train_loader:
 
+            img = img.to(device)
+            label_img = label_img.to(device)
+            # print(f"img={img.shape} {img.dtype}")
+            # print(f"output_image={output_image.shape} {output_image.dtype}")
 
+            # Forward pass
+            output = model(img)
+            loss = criterion(output, label_img)
 
+            # Backpropagation and optimization
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item()
+
+        # Save checkpoint every epoch
+        if (epoch + 1) % 20 == 0:
+            checkpoint_path = checkpoint_dir / f"autoencoder_epoch{epoch + 1}.pth"
+            torch.save(model.state_dict(), checkpoint_path)
+
+        print(f"Epoch [{epoch + 1}/{epochs}] Loss: {total_loss / len(train_loader)}")
+
+    print("Training finished.")
 
 
 if __name__ == "__main__":
