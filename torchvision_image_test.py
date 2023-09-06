@@ -51,7 +51,8 @@ def get_images():
     print(images)
     images = [Image.open(image) for image in images]
     transform = v2.ToTensor()
-    return list(map(transform, images))
+    images = list(map(transform, images))
+    return torch.stack(images)
 
 
 def main():
@@ -69,7 +70,7 @@ def main():
     #     break
     # plt.show()
     images = get_images()
-    print(len(images))
+    print(images.shape, len(images))
     fig, axes = plt.subplots(3, 3, figsize=(9, 9), tight_layout=True)
     for ax, img in zip(axes.flatten(), images):
         ax.imshow(img.permute(1, 2, 0))
