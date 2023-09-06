@@ -53,15 +53,38 @@ def train(net, criterion, optimizer, epochs, trainloader):
     return net, output_and_label, losses
 
 
-class AutoEncoder2(torch.nn.Module):
-    def __init__(self, enc, dec):
-        super().__init__()
-        self.enc = enc
-        self.dec = dec
+# Define the Convolutional Autoencoder architecture
+class Autoencoder(nn.Module):
+    def __init__(self):
+        super(Autoencoder, self).__init__()
+
+        # Encoder layers
+        self.encoder = nn.Sequential(
+            nn.Conv2d(1, 32, kernel_size=3, stride=2, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(64, 128, kernel_size=3, stride=2, padding=1),
+            nn.ReLU(),
+        )
+
+        # Decoder layers
+        self.decoder = nn.Sequential(
+            nn.ConvTranspose2d(128, 64, kernel_size=3, stride=2, padding=1),
+            nn.ReLU(),
+            nn.ConvTranspose2d(
+                64, 32, kernel_size=3, stride=2, padding=1, output_padding=1
+            ),
+            nn.ReLU(),
+            nn.ConvTranspose2d(
+                32, 1, kernel_size=3, stride=2, padding=1, output_padding=1
+            ),
+            nn.Sigmoid(),  # Output values between 0 and 1 for binary images
+        )
 
     def forward(self, x):
-        x = self.enc(x)
-        x = self.dec(x)
+        x = self.encoder(x)
+        x = self.decoder(x)
         return x
 
 
@@ -85,6 +108,16 @@ class MaskDataset(Dataset):
         return transformed_image, self.masks_pt[idx].unsqueeze(0)
 
 
+def old_train():
+    criterion = torch.nn.MSELoss()
+    optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
+    EPOCHS = 400
+    model, output_and_label, losses = train(
+        net, criterion, optimizer, EPOCHS, train_loader
+    )
+    torch.save(model.state_dict(), "model_weight_400.pth")
+
+
 def main():
     train_transform = A.Compose(
         [
@@ -96,34 +129,32 @@ def main():
             ToTensorV2(),
         ]
     )
+
     datasets = MaskDataset(train_transform)
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     batch_size = 32
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
 
-    enc = torch.nn.Sequential(
-        torch.nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
-        torch.nn.ReLU(),
-        # torch.nn.MaxPool2d(2),
-        torch.nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
-        torch.nn.ReLU(),
-    )
-    # print("init:", x.shape)
-    # x = enc(x)
-    # print("after 2nd pool:", x.shape)
-    dec = torch.nn.Sequential(
-        torch.nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
-        torch.nn.ReLU(),
-        torch.nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
-        torch.nn.Tanh(),
-    )
-    device = torch.device("cuda:0")
-    net = AutoEncoder2(enc, dec).to(device)
-    criterion = torch.nn.MSELoss()
-    optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
-    EPOCHS = 400
-    model, output_and_label, losses = train(
-        net, criterion, optimizer, EPOCHS, train_loader)
-    torch.save(model.state_dict(), 'model_weight_400.pth')
+    # Set up training parameters
+    learning_rate = 0.001
+    epochs = 50
+ 
+
+
+    # Initialize the autoencoder and optimizer
+    model = Autoencoder().to(device)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    criterion = nn.BCELoss()  # Binary Cross-Entropy Loss
+
+    # Create a directory to save checkpoints
+    checkpoint_dir = 'checkpoints'
+    # os.makedirs(checkpoint_dir, exist_ok=True)
+
+
+
+
 
 
 if __name__ == "__main__":
