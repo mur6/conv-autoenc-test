@@ -70,7 +70,7 @@ def main():
     # plt.show()
     images = get_images()
     print(len(images))
-    fig, axes = plt.subplots(3, 3)
+    fig, axes = plt.subplots(3, 3, figsize=(12, 12))
     for ax, img in zip(axes.flatten(), images):
         ax.imshow(img.permute(1, 2, 0))
     plt.show()
