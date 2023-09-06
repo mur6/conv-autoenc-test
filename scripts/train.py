@@ -171,8 +171,10 @@ def main():
 
     # Initialize the autoencoder and optimizer
     model = Autoencoder().to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    criterion = nn.BCELoss()  # Binary Cross-Entropy Loss
+    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    # criterion = nn.BCELoss()  # Binary Cross-Entropy Loss
+    criterion = torch.nn.MSELoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
     # Create a directory to save checkpoints
     checkpoint_dir = Path("checkpoints")
