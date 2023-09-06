@@ -120,10 +120,10 @@ def main():
     net = AutoEncoder2(enc, dec).to(device)
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
-    EPOCHS = 200
+    EPOCHS = 400
     model, output_and_label, losses = train(
         net, criterion, optimizer, EPOCHS, train_loader)
-    torch.save(model.state_dict(), 'model_weight.pth')
+    torch.save(model.state_dict(), 'model_weight_400.pth')
 
 
 if __name__ == "__main__":
