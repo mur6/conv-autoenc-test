@@ -5,7 +5,8 @@ from torch import nn
 from torch.utils.data import DataLoader
 import torchvision
 from torchvision import transforms
-from torchvision.datasets import CIFAR10
+# from torchvision.datasets import CIFAR10
+from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -73,10 +74,30 @@ def get_images():
     images = [Image.open(image) for image in images]
     transform = v2.ToTensor()
     images = list(map(transform, images))
-    images = torch.stack(images)
-    augmented = albumentations_transform(image=images)
-    images = augmented["image"]
+    # images = torch.stack(images)
+    # augmented = albumentations_transform(image=images)
+    # images = augmented["image"]
+    return images
 
+class CatsVsDogsDataset(Dataset):
+    def __init__(self, images_filepaths, transform=None):
+        self.images_filepaths = images_filepaths
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.images_filepaths)
+
+    def __getitem__(self, idx):
+        image_filepath = self.images_filepaths[idx]
+        image = cv2.imread(image_filepath)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        if os.path.normpath(image_filepath).split(os.sep)[-2] == "Cat":
+            label = 1.0
+        else:
+            label = 0.0
+        if self.transform is not None:
+            image = self.transform(image=image)["image"]
+        return image, label
 
 def main():
     # # iterator = iter(trainloader)
@@ -92,6 +113,20 @@ def main():
     #     plt.imshow(im.squeeze(0))
     #     break
     # plt.show()
+    images = get_images()
+    # print(images)
+    batch_size = 32
+    dataloader = DataLoader(
+        images,
+        batch_size=batch_size,
+        shuffle=True,
+        # num_workers=4,
+        collate_fn=custom_transform,
+    )
+    for k in dataloader:
+        print(k.shape)
+
+def main2():
     images = get_images()
     images = transform(images)
     print(images.shape, len(images))
