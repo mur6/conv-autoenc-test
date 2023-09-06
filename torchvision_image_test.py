@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 import torchvision.transforms as T
-import torchvision.transforms.v2 as t_v2
+from torchvision.transforms import v2
 
 
 # def imshow(img):
@@ -44,11 +44,8 @@ import torchvision.transforms.v2 as t_v2
 #     print('finished')
 #     return output_and_label, losses
 
-
-
-
-
 # transform = t_v2.RandomZoomOut(p=1.0)
+
 
 def main():
     # # iterator = iter(trainloader)
@@ -67,6 +64,13 @@ def main():
     sample_image_path = "../poetry-test-proj/samples/02"
     images = list(Path(sample_image_path).glob("*.jpeg"))
     print(images)
+    image = images[0]
+    img = Image.open(image)
+    trans = v2.ToTensor()
+    img = trans(img)
+    print(img)
+    plt.imshow(img.permute(1, 2, 0))
+    plt.show()
 
 
 if __name__ == "__main__":
