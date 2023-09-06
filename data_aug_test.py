@@ -47,8 +47,8 @@ class MaskDataset(Dataset):
 def main():
     train_transform = A.Compose(
         [
-            A.Cutout(num_holes=8, max_h_size=32, max_w_size=32, fill_value=0, p=0.75),
-            A.CoarseDropout(max_holes=64, max_height=16, max_width=16, fill_value=0, p=0.75),
+            A.Cutout(num_holes=4, max_h_size=16, max_w_size=16, fill_value=0, p=0.75),
+            A.CoarseDropout(max_holes=12, max_height=16, max_width=16, fill_value=0, p=0.6),
             # .Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             ToTensorV2(),
         ]
@@ -60,9 +60,13 @@ def main():
         batch_size=batch_size,
         shuffle=True
     )
-    for k in dataloader:
-        print(k.shape)
+    for images in dataloader:
+        # print(k.shape)
+        fig, axes = plt.subplots(2, 2, figsize=(9, 9), tight_layout=True)
+        for ax, img in zip(axes.flatten(), images[:4]):
+            ax.imshow(img.squeeze(0))
         break
+    plt.show()
 
 
 if __name__ == "__main__":
