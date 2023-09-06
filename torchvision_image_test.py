@@ -68,9 +68,11 @@ def main():
     #     plt.imshow(im.squeeze(0))
     #     break
     # plt.show()
-    img = get_images()[0]
-    print(img)
-    plt.imshow(img.permute(1, 2, 0))
+    images = get_images()
+    print(len(images))
+    fig, axes = plt.subplots(3, 3)
+    for ax, img in zip(axes.flatten(), images):
+        ax.imshow(img.permute(1, 2, 0))
     plt.show()
 
 
