@@ -43,20 +43,41 @@ class MaskDataset(Dataset):
         return image
 
 
-# データ拡張と正規化を組み合わせる
-def custom_transform(image, label):
-    image = torchvision_transform(image)  # 画像をPyTorchのTensorに変換
-    augmented = albumentations_transform(image=image.numpy())  # NumPy配列でデータ拡張
-    image = augmented["image"]
-    return image, label
 
 
-# データローダーを作成
-batch_size = 32
-dataloader = DataLoader(
-    dataset,
-    batch_size=batch_size,
-    shuffle=True,
-    num_workers=4,
-    collate_fn=custom_transform,
-)
+# # データ拡張と正規化を組み合わせる
+# def custom_transform(image, label):
+#     image = torchvision_transform(image)  # 画像をPyTorchのTensorに変換
+#     augmented = albumentations_transform(image=image.numpy())  # NumPy配列でデータ拡張
+#     image = augmented["image"]
+#     return image, label
+
+
+
+
+def main():
+    train_transform = A.Compose(
+        [
+            A.Cutout(num_holes=8, max_h_size=32, max_w_size=32, fill_value=0, p=0.75),
+            A.CoarseDropout(num_holes=24, max_height=16, max_width=16, fill_value=0, p=0.75),
+            # A.(),
+            # .Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            ToTensorV2(),
+        ]
+    )
+    datasets = MaskDataset(train_transform)
+    batch_size = 32
+    dataloader = DataLoader(
+        datasets,
+        batch_size=batch_size,
+        shuffle=True
+    )
+    for k in dataloader:
+        print(k.shape)
+
+
+
+
+
+if __name__ == "__main__":
+    main()
