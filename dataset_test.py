@@ -1,11 +1,31 @@
+from pathlib import Path
+
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
 import torchvision
-from torchvision import transforms
-from torchvision.datasets import CIFAR10
+
+from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import matplotlib.pyplot as plt
+
+from PIL import Image
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
+# from torchvision import transforms
+# import torchvision.transforms as T
+from torchvision.transforms import v2
+
+import torchvision.transforms.v2 as transforms
+
+transform = transforms.Compose(
+    [
+        transforms.ColorJitter(contrast=0.5),
+        transforms.RandomRotation(30),
+        transforms.CenterCrop(480),
+    ]
+)
+
 
 
 
