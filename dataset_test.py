@@ -26,21 +26,18 @@ transform = transforms.Compose(
     ]
 )
 
-
-
-
 def main():
-
-    masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
-    masks_train_loader = DataLoader(masks, batch_size=batch_size, shuffle=True)
-    for m in masks_train_loader:
-        # print(m[0].shape)
-        # print(m[0])
-        im = m[0]
-        im = transform(im.unsqueeze(0))
-        plt.imshow(im.squeeze(0))
-        break
-    plt.show()
+    masks_np = torch.load("data/simple-rectangle/MASKS_TENSOR.pt").numpy()
+    # masks_train_loader = DataLoader(masks, batch_size=batch_size, shuffle=True)
+    # for m in masks_train_loader:
+    #     # print(m[0].shape)
+    #     # print(m[0])
+    #     im = m[0]
+    #     im = transform(im.unsqueeze(0))
+    #     plt.imshow(im.squeeze(0))
+    #     break
+    # plt.show()
+    print(masks_np)
 
 
 if __name__ == "__main__":
