@@ -41,12 +41,12 @@ def train(net, criterion, optimizer, epochs, trainloader):
 transform = transforms.Compose(
     [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
 )
-trainset = CIFAR10("./data", train=True, transform=transform, download=True)
-testset = CIFAR10("./data", train=False, transform=transform, download=True)
+# trainset = CIFAR10("./data", train=True, transform=transform, download=True)
+# testset = CIFAR10("./data", train=False, transform=transform, download=True)
 
-batch_size = 50
-trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
-testloader = DataLoader(testset, batch_size=batch_size // 10, shuffle=False)
+# batch_size = 50
+# trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
+# testloader = DataLoader(testset, batch_size=batch_size // 10, shuffle=False)
 
 
 class AutoEncoder2(torch.nn.Module):
@@ -62,38 +62,52 @@ class AutoEncoder2(torch.nn.Module):
 
 
 def main():
-    conv1 = torch.nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3, padding=1)
+    conv1 = torch.nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, padding=1)
     conv2 = torch.nn.Conv2d(in_channels=16, out_channels=8, kernel_size=3, padding=1)
     pool = torch.nn.MaxPool2d(2)
 
-    iterator = iter(trainloader)
-    x, _ = next(iterator)
+    # iterator = iter(trainloader)
+    # x, _ = next(iterator)
+    x = torch.ones(32, 1, 96, 96)
 
-    print("init:", x.shape)
-    x = conv1(x)
-    print("after conv1:", x.shape)
-    x = torch.relu(x)
-    x = pool(x)
-    print("after 1st pool:", x.shape)
-    x = conv2(x)
-    print("after conv2:", x.shape)
-    x = torch.relu(x)
-    x = pool(x)
-    print("after 2nd pool:", x.shape)
+    # 
+    # x = conv1(x)
+    # print("after conv1:", x.shape)
+    # x = torch.relu(x)
+    # x = pool(x)
+    # print("after 1st pool:", x.shape)
+    # x = conv2(x)
+    # print("after conv2:", x.shape)
+    # x = torch.relu(x)
+    # x = pool(x)
+    # print("after 2nd pool:", x.shape)
+
+    # enc_old = torch.nn.Sequential(
+    #     torch.nn.Conv2d(3, 16, 3, padding=1),
+    #     torch.nn.ReLU(),
+    #     torch.nn.MaxPool2d(2),
+    #     torch.nn.Conv2d(16, 8, 3, padding=1),
+    #     torch.nn.ReLU(),
+    #     torch.nn.MaxPool2d(2),
+    # )
     enc = torch.nn.Sequential(
-        torch.nn.Conv2d(3, 16, 3, padding=1),
+        torch.nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
         torch.nn.ReLU(),
-        torch.nn.MaxPool2d(2),
-        torch.nn.Conv2d(16, 8, 3, padding=1),
-        torch.nn.ReLU(),
-        torch.nn.MaxPool2d(2),
+        # torch.nn.MaxPool2d(2),
+        torch.nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
+        torch.nn.ReLU()
     )
+    print("init:", x.shape)
+    x = enc(x)
+    print("after 2nd pool:", x.shape)
     dec = torch.nn.Sequential(
-        torch.nn.ConvTranspose2d(8, 16, kernel_size=2, stride=2),
+        torch.nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
         torch.nn.ReLU(),
-        torch.nn.ConvTranspose2d(16, 3, kernel_size=2, stride=2),
-        torch.nn.Sigmoid(),
+        torch.nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
+        torch.nn.Tanh()
     )
+    x = dec(x)
+    print("after decode:", x.shape)
     net = AutoEncoder2(enc, dec)
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
