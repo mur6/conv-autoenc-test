@@ -47,20 +47,24 @@ import torchvision.transforms.v2 as t_v2
 
 # transform = t_v2.RandomZoomOut(p=1.0)
 
+
+
+from PIL import Image
+
 def main():
-    # iterator = iter(trainloader)
-    # x, y = next(iterator)
-    # print(y)
-    masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
-    masks_train_loader = DataLoader(masks, batch_size=batch_size, shuffle=True)
-    for m in masks_train_loader:
-        # print(m[0].shape)
-        # print(m[0])
-        im = m[0]
-        im = transform(im.unsqueeze(0))
-        plt.imshow(im.squeeze(0))
-        break
-    plt.show()
+    # # iterator = iter(trainloader)
+    # # x, y = next(iterator)
+    # # print(y)
+    # masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
+    # masks_train_loader = DataLoader(masks, batch_size=batch_size, shuffle=True)
+    # for m in masks_train_loader:
+    #     # print(m[0].shape)
+    #     # print(m[0])
+    #     im = m[0]
+    #     im = transform(im.unsqueeze(0))
+    #     plt.imshow(im.squeeze(0))
+    #     break
+    # plt.show()
 
 
 if __name__ == "__main__":
