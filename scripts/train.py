@@ -164,7 +164,7 @@ def main():
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
 
     # Set up training parameters
-    learning_rate = 0.5
+    learning_rate = 0.1
     epochs = 250
 
     # Initialize the autoencoder and optimizer
