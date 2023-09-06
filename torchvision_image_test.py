@@ -47,8 +47,6 @@ import torchvision.transforms.v2 as t_v2
 
 # transform = t_v2.RandomZoomOut(p=1.0)
 
-
-
 from PIL import Image
 
 def main():

@@ -20,8 +20,8 @@ def train(net, criterion, optimizer, epochs, trainloader):
     losses = []
     output_and_label = []
 
-    for epoch in range(1, epochs+1):
-        print(f'epoch: {epoch}, ', end='')
+    for epoch in range(1, epochs + 1):
+        print(f"epoch: {epoch}, ", end="")
         running_loss = 0.0
         for counter, (img, _) in enumerate(trainloader, 1):
             optimizer.zero_grad()
@@ -32,9 +32,9 @@ def train(net, criterion, optimizer, epochs, trainloader):
             running_loss += loss.item()
         avg_loss = running_loss / counter
         losses.append(avg_loss)
-        print('loss:', avg_loss)
+        print("loss:", avg_loss)
         output_and_label.append((output, img))
-    print('finished')
+    print("finished")
     return output_and_label, losses
 
 
@@ -47,11 +47,13 @@ batch_size = 50
 # trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
 # testloader = DataLoader(testset, batch_size=batch_size // 10, shuffle=False)
 
+
 class AutoEncoder2(torch.nn.Module):
     def __init__(self, enc, dec):
         super().__init__()
         self.enc = enc
         self.dec = dec
+
     def forward(self, x):
         x = self.enc(x)
         x = self.dec(x)
@@ -69,6 +71,7 @@ import albumentations as A
 # ])
 
 transform = t_v2.RandomZoomOut(p=1.0)
+
 
 def main():
     # iterator = iter(trainloader)
