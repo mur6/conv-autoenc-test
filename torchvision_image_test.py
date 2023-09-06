@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
@@ -7,9 +9,10 @@ from torchvision.datasets import CIFAR10
 import numpy as np
 import matplotlib.pyplot as plt
 
+from PIL import Image
+
 import torchvision.transforms as T
 import torchvision.transforms.v2 as t_v2
-
 
 
 # def imshow(img):
@@ -47,8 +50,6 @@ import torchvision.transforms.v2 as t_v2
 
 # transform = t_v2.RandomZoomOut(p=1.0)
 
-from PIL import Image
-
 def main():
     # # iterator = iter(trainloader)
     # # x, y = next(iterator)
@@ -63,6 +64,7 @@ def main():
     #     plt.imshow(im.squeeze(0))
     #     break
     # plt.show()
+    sample_image_path = "../poetry-test-proj/samples/02"
 
 
 if __name__ == "__main__":
