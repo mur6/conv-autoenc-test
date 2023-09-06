@@ -42,14 +42,6 @@ class MaskDataset(Dataset):
         return image.squeeze(0)
 
 
-# # データ拡張と正規化を組み合わせる
-# def custom_transform(image, label):
-#     image = torchvision_transform(image)  # 画像をPyTorchのTensorに変換
-#     augmented = albumentations_transform(image=image.numpy())  # NumPy配列でデータ拡張
-#     image = augmented["image"]
-#     return image, label
-
-
 
 
 def main():
@@ -57,7 +49,6 @@ def main():
         [
             A.Cutout(num_holes=8, max_h_size=32, max_w_size=32, fill_value=0, p=0.75),
             A.CoarseDropout(max_holes=64, max_height=16, max_width=16, fill_value=0, p=0.75),
-            # A.(),
             # .Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             ToTensorV2(),
         ]
@@ -71,9 +62,7 @@ def main():
     )
     for k in dataloader:
         print(k.shape)
-
-
-
+        break
 
 
 if __name__ == "__main__":
