@@ -125,15 +125,15 @@ def main():
             ToTensorV2(),
         ]
     )
-    dataset = ImageDataset(
-        "../poetry-test-proj/samples/02")
+    datasets = ImageDataset(
+        "../poetry-test-proj/samples/02", train_transform)
     batch_size = 32
     dataloader = DataLoader(
-        images,
+        datasets,
         batch_size=batch_size,
         shuffle=True,
         # num_workers=4,
-        collate_fn=custom_transform,
+        # collate_fn=custom_transform,
     )
     for k in dataloader:
         print(k.shape)
