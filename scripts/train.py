@@ -35,10 +35,10 @@ def train(net, criterion, optimizer, epochs, trainloader):
         print(f"epoch: {epoch}, ", end="")
         running_loss = 0.0
         for counter, (img, output_image) in enumerate(trainloader, 1):
-            print(f"img={img.shape} output_image={output_image.shape}")
+            # print(f"img={img.shape} output_image={output_image.shape}")
             optimizer.zero_grad()
             output = net(img)
-            loss = criterion(output, img)
+            loss = criterion(output, output_image)
             loss.backward()
             optimizer.step()
             running_loss += loss.item()
