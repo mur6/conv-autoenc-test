@@ -162,11 +162,11 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    batch_size = 32
+    batch_size = 128
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
 
     # Set up training parameters
-    learning_rate = 0.001
+    learning_rate = 0.5
     epochs = 250
 
     # Initialize the autoencoder and optimizer
