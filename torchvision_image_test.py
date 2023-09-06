@@ -69,7 +69,7 @@ albumentations_transform = A.Compose(
 
 def get_images():
     sample_image_path = "../poetry-test-proj/samples/02"
-    images = list(Path(sample_image_path).glob("*.jpeg"))
+    images = 
     print(images)
     images = [Image.open(image) for image in images]
     transform = v2.ToTensor()
@@ -79,9 +79,10 @@ def get_images():
     # images = augmented["image"]
     return images
 
-class CatsVsDogsDataset(Dataset):
-    def __init__(self, images_filepaths, transform=None):
-        self.images_filepaths = images_filepaths
+
+class ImageDataset(Dataset):
+    def __init__(self, images_folder, transform=None):
+        self.images_filepaths = list(Path(images_folder).glob("*.jpeg"))
         self.transform = transform
 
     def __len__(self):
@@ -89,9 +90,8 @@ class CatsVsDogsDataset(Dataset):
 
     def __getitem__(self, idx):
         image_filepath = self.images_filepaths[idx]
-        image = cv2.imread(image_filepath)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
+        pil_image = Image.open(image_filepath)
+        image = np.asarray(pil_image)
 
         if self.transform is not None:
             image = self.transform(image=image)["image"]
