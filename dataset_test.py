@@ -13,39 +13,31 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
+
 # from torchvision import transforms
 import torchvision.transforms as T
 from torchvision.transforms import v2
 
 import torchvision.transforms.v2 as transforms
 
-# transform = transforms.Compose(
-#     [
-#         transforms.ColorJitter(contrast=0.5),
-#         transforms.RandomRotation(30),
-#         transforms.CenterCrop(480),
-#     ]
-# )
+
 transforms = v2.Compose(
-    [
-        v2.RandomZoomOut(side_range=(1, 2.5), p=1.0),
-        v2.Resize((96, 96))
-    ]
+    [v2.RandomZoomOut(side_range=(1, 2.5), p=1.0), v2.Resize((96, 96))]
 )
 
-def test():
-    # masks_train_loader = DataLoader(masks, batch_size=batch_size, shuffle=True)
-    # for m in masks_train_loader:
-    #     # print(m[0].shape)
-    #     # print(m[0])
-    #     im = m[0]
-    #     im = transform(im.unsqueeze(0))
-    num = masks.shape[0]
-    index = random.randint(0, num - 1)
-    index = 288
-    print(num, index)
-    orig_img = masks[index].unsqueeze(0)
-    # print(im.shape)
+# def test():
+#     # masks_train_loader = DataLoader(masks, batch_size=batch_size, shuffle=True)
+#     # for m in masks_train_loader:
+#     #     # print(m[0].shape)
+#     #     # print(m[0])
+#     #     im = m[0]
+#     #     im = transform(im.unsqueeze(0))
+#     num = masks.shape[0]
+#     index = random.randint(0, num - 1)
+#     index = 288
+#     print(num, index)
+#     orig_img = masks[index].unsqueeze(0)
+#     # print(im.shape)
 
 
 def augments_data(orig_img):
@@ -54,10 +46,12 @@ def augments_data(orig_img):
 
 def main():
     masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
+
     def _iter():
         for orig_img in masks:
             yield orig_img.unsqueeze(0)
             yield from augments_data(orig_img)
+
     image_list = list(_iter())
     images = torch.cat(image_list, dim=0)
     p = Path("data/simple-rectangle") / "argumented_masks.pt"

@@ -22,7 +22,6 @@ import torchvision.transforms.v2 as transforms
 sample_image_path = "../poetry-test-proj/samples/02"
 
 
-
 class MaskDataset(Dataset):
     def __init__(self, transform=None):
         # self.images_filepaths = list(Path(images_folder).glob("*.jpeg"))
@@ -42,24 +41,20 @@ class MaskDataset(Dataset):
         return image.squeeze(0)
 
 
-
-
 def main():
     train_transform = A.Compose(
         [
             A.Cutout(num_holes=4, max_h_size=16, max_w_size=16, fill_value=0, p=0.75),
-            A.CoarseDropout(max_holes=12, max_height=16, max_width=16, fill_value=0, p=0.6),
+            A.CoarseDropout(
+                max_holes=12, max_height=16, max_width=16, fill_value=0, p=0.6
+            ),
             # .Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             ToTensorV2(),
         ]
     )
     datasets = MaskDataset(train_transform)
     batch_size = 32
-    dataloader = DataLoader(
-        datasets,
-        batch_size=batch_size,
-        shuffle=True
-    )
+    dataloader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
     for images in dataloader:
         # print(k.shape)
         fig, axes = plt.subplots(2, 2, figsize=(9, 9), tight_layout=True)

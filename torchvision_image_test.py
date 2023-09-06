@@ -5,6 +5,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 import torchvision
 from torchvision import transforms
+
 # from torchvision.datasets import CIFAR10
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
@@ -14,6 +15,7 @@ from PIL import Image
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 import torchvision.transforms as T
+
 # from torchvision.transforms import v2
 import torchvision.transforms.v2 as transforms
 
@@ -68,7 +70,7 @@ albumentations_transform = A.Compose(
 
 def get_images():
     sample_image_path = "../poetry-test-proj/samples/02"
-    # images = 
+    # images =
     # print(images)
     images = [Image.open(image) for image in images]
     transform = v2.ToTensor()
@@ -116,7 +118,9 @@ def main():
     train_transform = A.Compose(
         [
             A.SmallestMaxSize(max_size=160),
-            A.ShiftScaleRotate(shift_limit=0.05, scale_limit=0.05, rotate_limit=15, p=0.5),
+            A.ShiftScaleRotate(
+                shift_limit=0.05, scale_limit=0.05, rotate_limit=15, p=0.5
+            ),
             A.RandomCrop(height=128, width=128),
             A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.5),
             A.RandomBrightnessContrast(p=0.5),
@@ -124,8 +128,7 @@ def main():
             ToTensorV2(),
         ]
     )
-    datasets = ImageDataset(
-        "../poetry-test-proj/samples/02", train_transform)
+    datasets = ImageDataset("../poetry-test-proj/samples/02", train_transform)
     batch_size = 32
     dataloader = DataLoader(
         datasets,
@@ -136,6 +139,7 @@ def main():
     )
     for k in dataloader:
         print(k.shape)
+
 
 def main2():
     images = get_images()
