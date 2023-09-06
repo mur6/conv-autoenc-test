@@ -60,7 +60,9 @@ def main():
             yield from augments_data(orig_img)
     image_list = list(_iter())
     images = torch.cat(image_list, dim=0)
-    print(images.shape)
+    p = Path("data/simple-rectangle") / "argumented_masks.pt"
+    torch.save(images, p)
+    print(f"argumented masks saved! {images.shape}")
     show_result = False
     if show_result:
         fig, axes = plt.subplots(2, 2, figsize=(9, 9), tight_layout=True)
