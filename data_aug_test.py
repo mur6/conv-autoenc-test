@@ -18,23 +18,16 @@ from torchvision.transforms import v2
 
 import torchvision.transforms.v2 as transforms
 
-# transform = transforms.Compose(
-#     [
-#         transforms.ColorJitter(contrast=0.5),
-#         transforms.RandomRotation(30),
-#         transforms.CenterCrop(480),
-#     ]
-# )
 
-# データセットを読み込む
 sample_image_path = "../poetry-test-proj/samples/02"
-dataset = ImageFolder(
-    sample_image_path, transform=None
-)
 
-class ImageDataset(Dataset):
-    def __init__(self, images_folder, transform=None):
-        self.images_filepaths = list(Path(images_folder).glob("*.jpeg"))
+
+
+class MaskDataset(Dataset):
+    def __init__(self, transform=None):
+        # self.images_filepaths = list(Path(images_folder).glob("*.jpeg"))
+        p = Path("data/simple-rectangle") / "argumented_masks.pt"
+        self.masks = torch.load(p)
         self.transform = transform
 
     def __len__(self):
@@ -48,6 +41,7 @@ class ImageDataset(Dataset):
         if self.transform is not None:
             image = self.transform(image=image)["image"]
         return image
+
 
 # データ拡張と正規化を組み合わせる
 def custom_transform(image, label):
