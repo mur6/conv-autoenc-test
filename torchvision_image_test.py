@@ -44,7 +44,14 @@ from torchvision.transforms import v2
 #     print('finished')
 #     return output_and_label, losses
 
-# transform = t_v2.RandomZoomOut(p=1.0)
+
+def get_images():
+    sample_image_path = "../poetry-test-proj/samples/02"
+    images = list(Path(sample_image_path).glob("*.jpeg"))
+    print(images)
+    images = [Image.open(image) for image in images]
+    transform = v2.ToTensor()
+    return list(map(transform, images))
 
 
 def main():
@@ -61,13 +68,7 @@ def main():
     #     plt.imshow(im.squeeze(0))
     #     break
     # plt.show()
-    sample_image_path = "../poetry-test-proj/samples/02"
-    images = list(Path(sample_image_path).glob("*.jpeg"))
-    print(images)
-    image = images[0]
-    img = Image.open(image)
-    trans = v2.ToTensor()
-    img = trans(img)
+    img = get_images()[0]
     print(img)
     plt.imshow(img.permute(1, 2, 0))
     plt.show()
