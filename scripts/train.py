@@ -94,13 +94,11 @@ class Autoencoder(nn.Module):
             # conv 4
             nn.ConvTranspose2d(in_channels=128, out_channels=64,
                                kernel_size=3, stride=1, padding=2),
-            nn.BatchNorm2d(64),
             nn.ReLU(),
             # conv 5
             nn.Upsample(scale_factor=2, mode='bilinear'),
             nn.ConvTranspose2d(in_channels=64, out_channels=32,
                                kernel_size=3, stride=1, padding=2),
-            nn.BatchNorm2d(32),
             nn.ReLU(),
             # conv 6 out
             nn.Upsample(scale_factor=2, mode='bilinear'),
