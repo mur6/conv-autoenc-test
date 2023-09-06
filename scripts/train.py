@@ -111,7 +111,7 @@ class Autoencoder(nn.Module):
 
     def forward(self, x):
         x = self.encoder(x)
-        print(f"x={x.shape}")
+        # print(f"x={x.shape}")
         x = self.decoder(x)
         return x
 
@@ -180,17 +180,18 @@ def main():
 
     # Training loop
     for epoch in range(epochs):
+        # print(f"epoch: {epoch}, ", end="")
         total_loss = 0
         for img, label_img in train_loader:
 
             img = img.to(device)
             label_img = label_img.to(device)
-            print(f"img={img.shape} {img.dtype}")
-            print(f"output_image={label_img.shape} {label_img.dtype}")
+            # print(f"img={img.shape} {img.dtype}")
+            # print(f"output_image={label_img.shape} {label_img.dtype}")
 
             # Forward pass
             output = model(img)
-            print(f"output={output.shape} {output.dtype}")
+            # print(f"output={output.shape} {output.dtype}")
             loss = criterion(output, label_img)
 
             # Backpropagation and optimization
@@ -200,8 +201,12 @@ def main():
 
             total_loss += loss.item()
 
+        # avg_loss = total_loss / counter
+        # # losses.append(avg_loss)
+        # print(f"loss:", avg_loss)
+
         # Save checkpoint every epoch
-        if (epoch + 1) % 20 == 0:
+        if (epoch + 1) % 10 == 0:
             checkpoint_path = checkpoint_dir / f"autoencoder_epoch{epoch + 1}.pth"
             torch.save(model.state_dict(), checkpoint_path)
             print(f"Saved: {checkpoint_path}")
