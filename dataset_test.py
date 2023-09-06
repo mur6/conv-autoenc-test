@@ -37,13 +37,15 @@ def train(net, criterion, optimizer, epochs, trainloader):
     print('finished')
     return output_and_label, losses
 
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-trainset = CIFAR10('./data', train=True, transform=transform, download=True)
-testset = CIFAR10('./data', train=False, transform=transform, download=True)
 
 batch_size = 50
-trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
-testloader = DataLoader(testset, batch_size=batch_size // 10, shuffle=False)
+
+# transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+# trainset = CIFAR10('./data', train=True, transform=transform, download=True)
+# testset = CIFAR10('./data', train=False, transform=transform, download=True)
+
+# trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
+# testloader = DataLoader(testset, batch_size=batch_size // 10, shuffle=False)
 
 class AutoEncoder2(torch.nn.Module):
     def __init__(self, enc, dec):
@@ -56,26 +58,30 @@ class AutoEncoder2(torch.nn.Module):
         return x
 
 
+import torchvision.transforms as T
+import torchvision.transforms.v2 as t_v2
 import albumentations as A
 
-transform = A.Compose([
-    A.RandomCrop(width=256, height=256),
-    A.HorizontalFlip(p=0.5),
-    A.RandomBrightnessContrast(p=0.2),
-])
+# transform = A.Compose([
+#     A.RandomCrop(width=256, height=256),
+#     A.HorizontalFlip(p=0.5),
+#     A.RandomBrightnessContrast(p=0.2),
+# ])
 
+transform = t_v2.RandomZoomOut(p=1.0)
 
 def main():
-    iterator = iter(trainloader)
-    x, y = next(iterator)
-    print(y)
+    # iterator = iter(trainloader)
+    # x, y = next(iterator)
+    # print(y)
     masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
     masks_train_loader = DataLoader(masks, batch_size=batch_size, shuffle=True)
     for m in masks_train_loader:
-        print(m[0].shape)
-        print(m[0])
+        # print(m[0].shape)
+        # print(m[0])
         im = m[0]
-        plt.imshow(im)
+        im = transform(im.unsqueeze(0))
+        plt.imshow(im.squeeze(0))
         break
     plt.show()
 
