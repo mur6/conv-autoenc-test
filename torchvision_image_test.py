@@ -73,7 +73,8 @@ def main():
     fig, axes = plt.subplots(3, 3, figsize=(9, 9), tight_layout=True)
     for ax, img in zip(axes.flatten(), images):
         ax.imshow(img.permute(1, 2, 0))
-    plt.show()
+    plt.savefig("images.png")
+    # plt.show()
 
 
 if __name__ == "__main__":
