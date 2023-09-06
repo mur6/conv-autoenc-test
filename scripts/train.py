@@ -109,7 +109,7 @@ class Autoencoder(nn.Module):
 
     def forward(self, x):
         x = self.encoder(x)
-        print(f"x={x.shape}")
+        # print(f"x={x.shape}")
         x = self.decoder(x)
         return x
 
@@ -160,7 +160,7 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    batch_size = 32
+    batch_size = 128
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
 
     # Set up training parameters
@@ -191,7 +191,7 @@ def main():
 
             # Forward pass
             output = model(img)
-            print(f"output={output.shape} {output.dtype}")
+            # print(f"output={output.shape} {output.dtype}")
             loss = criterion(output, label_img)
 
             # Backpropagation and optimization
