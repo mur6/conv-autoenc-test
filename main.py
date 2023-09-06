@@ -70,7 +70,7 @@ def main():
     # x, _ = next(iterator)
     x = torch.ones(32, 1, 96, 96)
 
-    # 
+    #
     # x = conv1(x)
     # print("after conv1:", x.shape)
     # x = torch.relu(x)
@@ -95,7 +95,7 @@ def main():
         torch.nn.ReLU(),
         # torch.nn.MaxPool2d(2),
         torch.nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
-        torch.nn.ReLU()
+        torch.nn.ReLU(),
     )
     print("init:", x.shape)
     x = enc(x)
@@ -104,7 +104,7 @@ def main():
         torch.nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
         torch.nn.ReLU(),
         torch.nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
-        torch.nn.Tanh()
+        torch.nn.Tanh(),
     )
     x = dec(x)
     print("after decode:", x.shape)
