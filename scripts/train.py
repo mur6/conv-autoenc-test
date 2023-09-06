@@ -62,17 +62,17 @@ class Autoencoder(nn.Module):
         self.encoder = nn.Sequential(
             # conv1
             nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=2),
-            nn.BatchNorm2d(32),
+            # nn.BatchNorm2d(32),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            # nn.MaxPool2d(kernel_size=2, stride=2),
             # conv2
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=2),
-            nn.BatchNorm2d(64),
+            # nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            # nn.MaxPool2d(kernel_size=2, stride=2),
             # conv3
             nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=2),
-            nn.BatchNorm2d(128),
+            # nn.BatchNorm2d(128),
             nn.ReLU(),
         )
 
@@ -96,20 +96,20 @@ class Autoencoder(nn.Module):
                                kernel_size=3, stride=1, padding=2),
             nn.ReLU(),
             # conv 5
-            nn.Upsample(scale_factor=2, mode='bilinear'),
+            # nn.Upsample(scale_factor=2, mode='bilinear'),
             nn.ConvTranspose2d(in_channels=64, out_channels=32,
                                kernel_size=3, stride=1, padding=2),
             nn.ReLU(),
             # conv 6 out
-            nn.Upsample(scale_factor=2, mode='bilinear'),
+            # nn.Upsample(scale_factor=2, mode='bilinear'),
             nn.ConvTranspose2d(in_channels=32, out_channels=1,
-                               kernel_size=3, stride=1, padding=1),
+                               kernel_size=3, stride=1, padding=2),
             nn.Softmax()
         )
 
     def forward(self, x):
         x = self.encoder(x)
-        # print(f"x={x.shape}")
+        print(f"x={x.shape}")
         x = self.decoder(x)
         return x
 
@@ -160,7 +160,7 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    batch_size = 128
+    batch_size = 32
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
 
     # Set up training parameters
@@ -191,7 +191,7 @@ def main():
 
             # Forward pass
             output = model(img)
-            # print(f"output={output.shape} {output.dtype}")
+            print(f"output={output.shape} {output.dtype}")
             loss = criterion(output, label_img)
 
             # Backpropagation and optimization
