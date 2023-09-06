@@ -61,11 +61,13 @@ def main():
     image_list = list(_iter())
     images = torch.cat(image_list, dim=0)
     print(images.shape)
-    fig, axes = plt.subplots(2, 2, figsize=(9, 9), tight_layout=True)
-    for ax, img in zip(axes.flatten(), images):
-        # ax.imshow(img.permute(1, 2, 0))
-        ax.imshow(img.squeeze(0))
-    plt.show()
+    show_result = False
+    if show_result:
+        fig, axes = plt.subplots(2, 2, figsize=(9, 9), tight_layout=True)
+        sampled_images = random.sample(image_list, 4)
+        for ax, img in zip(axes.flatten(), sampled_images):
+            ax.imshow(img.squeeze(0))
+        plt.show()
 
 
 if __name__ == "__main__":
