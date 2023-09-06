@@ -28,7 +28,7 @@ import torchvision.transforms.v2 as transforms
 # )
 transforms = v2.Compose(
     [
-        v2.RandomZoomOut(p=1.0),
+        v2.RandomZoomOut(side_range=(1, 2.5), p=1.0),
         v2.Resize((96, 96))
     ]
 )

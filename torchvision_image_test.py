@@ -13,9 +13,8 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
-# import torchvision.transforms as T
-from torchvision.transforms import v2
-
+import torchvision.transforms as T
+# from torchvision.transforms import v2
 import torchvision.transforms.v2 as transforms
 
 transform = transforms.Compose(
