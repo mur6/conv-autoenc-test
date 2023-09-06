@@ -14,6 +14,15 @@ from PIL import Image
 import torchvision.transforms as T
 from torchvision.transforms import v2
 
+import torchvision.transforms.v2 as transforms
+
+transform = transforms.Compose(
+    [
+        transforms.ColorJitter(contrast=0.5),
+        transforms.RandomRotation(30),
+        transforms.CenterCrop(480),
+    ]
+)
 
 # def imshow(img):
 #     img = torchvision.utils.make_grid(img)
@@ -70,6 +79,7 @@ def main():
     #     break
     # plt.show()
     images = get_images()
+    images = transform(images)
     print(images.shape, len(images))
     fig, axes = plt.subplots(3, 3, figsize=(9, 9), tight_layout=True)
     for ax, img in zip(axes.flatten(), images):
