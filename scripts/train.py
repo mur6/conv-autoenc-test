@@ -34,7 +34,8 @@ def train(net, criterion, optimizer, epochs, trainloader):
     for epoch in range(1, epochs + 1):
         print(f"epoch: {epoch}, ", end="")
         running_loss = 0.0
-        for counter, (img, _) in enumerate(trainloader, 1):
+        for counter, (img, output_image) in enumerate(trainloader, 1):
+            print(f"img={img.shape} output_image={output_image.shape}")
             optimizer.zero_grad()
             output = net(img)
             loss = criterion(output, img)
@@ -64,19 +65,21 @@ class AutoEncoder2(torch.nn.Module):
 class MaskDataset(Dataset):
     def __init__(self, transform=None):
         p = Path("data/simple-rectangle") / "argumented_masks.pt"
-        self.masks = torch.load(p).numpy()
+        self.masks_pt = torch.load(p)
+        self.masks_np = self.masks_pt.numpy()
         self.transform = transform
 
     def __len__(self):
-        return self.masks.shape[0]
+        return self.masks_pt.shape[0]
 
     def __getitem__(self, idx):
-        image = self.masks[idx]
+        image = self.masks_np[idx]
         # pil_image = Image.open(image_filepath)
         # image = image.numpy()
-        if self.transform is not None:
-            image = self.transform(image=image)["image"]
-        return image.squeeze(0)
+        # if self.transform is not None:
+        transformed_image = self.transform(image=image)["image"]
+        # return transformed_image.squeeze(0), self.masks_pt[idx].squeeze(0)
+        return transformed_image, self.masks_pt[idx].unsqueeze(0)
 
 
 def main():
