@@ -63,7 +63,6 @@ class AutoEncoder2(torch.nn.Module):
 
 class MaskDataset(Dataset):
     def __init__(self, transform=None):
-        # self.images_filepaths = list(Path(images_folder).glob("*.jpeg"))
         p = Path("data/simple-rectangle") / "argumented_masks.pt"
         self.masks = torch.load(p).numpy()
         self.transform = transform
@@ -94,13 +93,29 @@ def main():
     datasets = MaskDataset(train_transform)
     batch_size = 32
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
-    # for images in train_loader:
-    #     fig, axes = plt.subplots(2, 2, figsize=(9, 9), tight_layout=True)
-    #     for ax, img in zip(axes.flatten(), images[:4]):
-    #         ax.imshow(img.squeeze(0))
-    #     break
-    # plt.show()
 
+    enc = torch.nn.Sequential(
+        torch.nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
+        torch.nn.ReLU(),
+        # torch.nn.MaxPool2d(2),
+        torch.nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
+        torch.nn.ReLU(),
+    )
+    # print("init:", x.shape)
+    # x = enc(x)
+    # print("after 2nd pool:", x.shape)
+    dec = torch.nn.Sequential(
+        torch.nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
+        torch.nn.ReLU(),
+        torch.nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
+        torch.nn.Tanh(),
+    )
+    net = AutoEncoder2(enc, dec)
+    criterion = torch.nn.MSELoss()
+    optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
+    EPOCHS = 100
+
+    output_and_label, losses = train(net, criterion, optimizer, EPOCHS, train_loader)
 
 if __name__ == "__main__":
     main()
