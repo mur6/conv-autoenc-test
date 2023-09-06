@@ -139,7 +139,7 @@ def main():
 
     # Set up training parameters
     learning_rate = 0.001
-    epochs = 50
+    epochs = 250
 
     # Initialize the autoencoder and optimizer
     model = Autoencoder().to(device)
