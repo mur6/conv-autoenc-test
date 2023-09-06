@@ -54,12 +54,16 @@ transform = transforms.Compose(
 #     print('finished')
 #     return output_and_label, losses
 
-albumentations_transform = A.Compose([
-    A.Resize(256, 256),  # 画像のリサイズ
-    A.RandomCrop(224, 224),  # ランダムクロップ
-    A.HorizontalFlip(p=0.5),  # 水平反転
-    A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2, p=0.5),  # 色調変更
-])
+albumentations_transform = A.Compose(
+    [
+        A.Resize(256, 256),  # 画像のリサイズ
+        A.RandomCrop(224, 224),  # ランダムクロップ
+        A.HorizontalFlip(p=0.5),  # 水平反転
+        A.ColorJitter(
+            brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2, p=0.5
+        ),  # 色調変更
+    ]
+)
 
 
 def get_images():
@@ -69,7 +73,9 @@ def get_images():
     images = [Image.open(image) for image in images]
     transform = v2.ToTensor()
     images = list(map(transform, images))
-    return torch.stack(images)
+    images = torch.stack(images)
+    augmented = albumentations_transform(image=images)
+    images = augmented["image"]
 
 
 def main():
