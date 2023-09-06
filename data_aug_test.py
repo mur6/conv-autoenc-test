@@ -1,37 +1,53 @@
-import albumentations as A
-import torchvision.transforms as T
-from torchvision.datasets import ImageFolder
+from pathlib import Path
+import random
+
+import torch
+from torch import nn
 from torch.utils.data import DataLoader
+import torchvision
 
-# torchvisionの変換関数を定義
-torchvision_transform = T.Compose(
-    [
-        T.ToTensor(),  # Tensorに変換
-        T.Normalize(
-            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-        ),  # 平均と標準偏差で正規化
-    ]
-)
+from torch.utils.data import Dataset, DataLoader
+import numpy as np
+import matplotlib.pyplot as plt
 
-# albumentationsのデータ拡張を定義
-albumentations_transform = A.Compose(
-    [
-        A.Resize(256, 256),  # 画像のリサイズ
-        A.RandomCrop(224, 224),  # ランダムクロップ
-        A.HorizontalFlip(p=0.5),  # 水平反転
-        A.ColorJitter(
-            brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2, p=0.5
-        ),  # 色調変更
-    ]
-)
+from PIL import Image
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
+import torchvision.transforms as T
+from torchvision.transforms import v2
+
+import torchvision.transforms.v2 as transforms
+
+# transform = transforms.Compose(
+#     [
+#         transforms.ColorJitter(contrast=0.5),
+#         transforms.RandomRotation(30),
+#         transforms.CenterCrop(480),
+#     ]
+# )
 
 # データセットを読み込む
 sample_image_path = "../poetry-test-proj/samples/02"
 dataset = ImageFolder(
     sample_image_path, transform=None
 )
-# ここでtransformはNoneに設定します
 
+class ImageDataset(Dataset):
+    def __init__(self, images_folder, transform=None):
+        self.images_filepaths = list(Path(images_folder).glob("*.jpeg"))
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.images_filepaths)
+
+    def __getitem__(self, idx):
+        image_filepath = self.images_filepaths[idx]
+        pil_image = Image.open(image_filepath)
+        image = np.asarray(pil_image)
+
+        if self.transform is not None:
+            image = self.transform(image=image)["image"]
+        return image
 
 # データ拡張と正規化を組み合わせる
 def custom_transform(image, label):
