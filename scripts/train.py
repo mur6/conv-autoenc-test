@@ -50,7 +50,7 @@ def train(net, criterion, optimizer, epochs, trainloader):
         print("loss:", avg_loss)
         output_and_label.append((output, img))
     print("finished")
-    return output_and_label, losses
+    return net, output_and_label, losses
 
 
 class AutoEncoder2(torch.nn.Module):
@@ -120,9 +120,11 @@ def main():
     net = AutoEncoder2(enc, dec).to(device)
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
-    EPOCHS = 100
+    EPOCHS = 150
+    model, output_and_label, losses = train(
+        net, criterion, optimizer, EPOCHS, train_loader)
+    torch.save(model.state_dict(), 'model_weight.pth')
 
-    output_and_label, losses = train(net, criterion, optimizer, EPOCHS, train_loader)
 
 if __name__ == "__main__":
     main()
