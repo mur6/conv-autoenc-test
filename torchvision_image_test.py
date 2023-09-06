@@ -10,8 +10,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from PIL import Image
+import albumentations as A
 
-import torchvision.transforms as T
+# import torchvision.transforms as T
 from torchvision.transforms import v2
 
 import torchvision.transforms.v2 as transforms
@@ -52,6 +53,13 @@ transform = transforms.Compose(
 #         output_and_label.append((output, img))
 #     print('finished')
 #     return output_and_label, losses
+
+albumentations_transform = A.Compose([
+    A.Resize(256, 256),  # 画像のリサイズ
+    A.RandomCrop(224, 224),  # ランダムクロップ
+    A.HorizontalFlip(p=0.5),  # 水平反転
+    A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2, p=0.5),  # 色調変更
+])
 
 
 def get_images():
