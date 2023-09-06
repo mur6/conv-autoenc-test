@@ -65,6 +65,8 @@ def main():
     #     break
     # plt.show()
     sample_image_path = "../poetry-test-proj/samples/02"
+    images = list(Path(sample_image_path).glob("*.jpeg"))
+    print(images)
 
 
 if __name__ == "__main__":
