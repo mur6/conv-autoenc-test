@@ -113,7 +113,8 @@ def main():
         torch.nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
         torch.nn.Tanh(),
     )
-    net = AutoEncoder2(enc, dec)
+    device = torch.device("cuda")
+    net = AutoEncoder2(enc, dec).to(device)
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
     EPOCHS = 100
