@@ -35,7 +35,10 @@ def train(net, criterion, optimizer, epochs, trainloader):
         print(f"epoch: {epoch}, ", end="")
         running_loss = 0.0
         for counter, (img, output_image) in enumerate(trainloader, 1):
-            # print(f"img={img.shape} output_image={output_image.shape}")
+            img = img.cuda()
+            output_image = output_image.cuda()
+            # print(f"img={img.shape} {img.dtype}")
+            # print(f"output_image={output_image.shape} {output_image.dtype}")
             optimizer.zero_grad()
             output = net(img)
             loss = criterion(output, output_image)
@@ -113,7 +116,7 @@ def main():
         torch.nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
         torch.nn.Tanh(),
     )
-    device = torch.device("cuda")
+    device = torch.device("cuda:0")
     net = AutoEncoder2(enc, dec).to(device)
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
