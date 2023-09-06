@@ -39,13 +39,14 @@ def main():
     index = random.randint(0, num - 1)
     index = 288
     print(num, index)
-    im = masks[index].unsqueeze(0)
-    print(im.shape)
+    orig_img = masks[index].unsqueeze(0)
+    # print(im.shape)
     zoomout = v2.RandomZoomOut(p=1.0)
-    im = zoomout(im)
-    # print(masks_np)
-
-    plt.imshow(im.squeeze(0))
+    images = [zoomout(orig_img) for _ in range(4)]
+    fig, axes = plt.subplots(2, 2, figsize=(9, 9), tight_layout=True)
+    for ax, img in zip(axes.flatten(), images):
+        # ax.imshow(img.permute(1, 2, 0))
+        ax.imshow(img.squeeze(0))
     plt.show()
 
 
