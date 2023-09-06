@@ -105,7 +105,7 @@ class Autoencoder(nn.Module):
             # conv 6 out
             nn.Upsample(scale_factor=2, mode='bilinear'),
             nn.ConvTranspose2d(in_channels=32, out_channels=1,
-                               kernel_size=3, stride=1, padding=2),
+                               kernel_size=3, stride=1, padding=1),
             nn.Softmax()
         )
 
