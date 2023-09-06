@@ -37,9 +37,14 @@ def main():
     #     im = transform(im.unsqueeze(0))
     num = masks.shape[0]
     index = random.randint(0, num - 1)
+    index = 288
     print(num, index)
-    im = masks[index]
+    im = masks[index].unsqueeze(0)
+    print(im.shape)
+    zoomout = v2.RandomZoomOut(p=1.0)
+    im = zoomout(im)
     # print(masks_np)
+
     plt.imshow(im.squeeze(0))
     plt.show()
 
