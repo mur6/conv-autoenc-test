@@ -4,6 +4,6 @@ Describe your project here.
 
 ## 実行方法
 
-> python make_mask_datasets.py
+> python scripts/make_mask_datasets.py
 
-> python visualize_augmented_masks.py
+> python scripts/visualize_augmented_masks.py
