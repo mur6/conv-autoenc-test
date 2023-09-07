@@ -20,9 +20,6 @@ import torchvision.transforms.v2 as transforms
 from src.augmenting import train_transform
 
 
-# sample_image_path = "../poetry-test-proj/samples/02"
-
-
 class MaskDataset(Dataset):
     def __init__(self, transform=None):
         # self.images_filepaths = list(Path(images_folder).glob("*.jpeg"))
