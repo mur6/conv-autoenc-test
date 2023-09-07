@@ -102,17 +102,17 @@ def main():
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
 
     # Set up training parameters
-    learning_rate = 0.1
+    learning_rate = 0.5
     epochs = 250
 
     # Initialize the autoencoder and optimizer
     model = AutoEncoderV4().to(device)
     # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    # criterion = nn.BCELoss()  # Binary Cross-Entropy Loss
-    criterion = torch.nn.MSELoss()
+    criterion = torch.nn.BCELoss()  # Binary Cross-Entropy Loss
+    # criterion = torch.nn.MSELoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
     # scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.1)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.6)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.6)
 
     # Create a directory to save checkpoints
     checkpoint_dir = Path("checkpoints")
