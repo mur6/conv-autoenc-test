@@ -20,6 +20,8 @@ import torchvision.transforms.v2 as transforms
 
 
 sample_image_path = "../poetry-test-proj/samples/02"
+MASK_SIZE = 32
+DROP_SIZE = int(MASK_SIZE * 0.1666)
 
 
 class MaskDataset(Dataset):
@@ -44,10 +46,15 @@ class MaskDataset(Dataset):
 def main():
     train_transform = A.Compose(
         [
-            A.Cutout(num_holes=4, max_h_size=16, max_w_size=16, fill_value=0, p=0.75),
             A.CoarseDropout(
-                max_holes=12, max_height=16, max_width=16, fill_value=0, p=0.6
+                max_holes=50, max_height=1, max_width=1, fill_value=0, p=0.9
             ),
+            A.OneOf([
+                A.Cutout(num_holes=4, max_h_size=DROP_SIZE, max_w_size=DROP_SIZE, fill_value=0, p=0.75),
+                A.CoarseDropout(
+                    max_holes=12, max_height=DROP_SIZE, max_width=DROP_SIZE, fill_value=0, p=0.9
+                ),
+            ], p=0.95),
             # .Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             ToTensorV2(),
         ]
