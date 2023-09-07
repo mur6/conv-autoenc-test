@@ -150,7 +150,9 @@ def main():
             torch.save(model.state_dict(), checkpoint_path)
             print(f"Saved: {checkpoint_path}")
 
-        print(f"Epoch [{epoch + 1}/{epochs}] Loss: {total_loss / len(train_loader)} {scheduler.get_last_lr()}")
+        print(
+            f"Epoch [{epoch + 1}/{epochs}] Loss: {total_loss / len(train_loader)} {scheduler.get_last_lr()}"
+        )
         scheduler.step()
     print("Training finished.")
 
