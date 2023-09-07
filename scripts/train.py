@@ -16,7 +16,7 @@ import torchvision.transforms as T
 from torchvision.transforms import v2
 import torchvision.transforms.v2 as transforms
 
-from src.models import AutoEncoderV4, AutoEncoderV5, CVAE, CVAEv2
+from src.models import AutoEncoderV4, AutoEncoderV5, CVAEv2, CVAEv3
 
 
 def imshow(img):
@@ -55,7 +55,7 @@ def train(net, criterion, optimizer, epochs, trainloader):
 
 class MaskDataset(Dataset):
     def __init__(self, transform=None):
-        p = Path("data/simple-rectangle") / "argumented_masks.pt"
+        p = Path("data/simple-rectangle") / "argumented_masks_32x32.pt"
         self.masks_pt = torch.load(p)
         self.masks_np = self.masks_pt.numpy()
         self.transform = transform
@@ -99,15 +99,15 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    batch_size = 8
+    batch_size = 32
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
 
     # Set up training parameters
-    learning_rate = 0.012
+    learning_rate = 0.04
     epochs = 500
 
     # Initialize the autoencoder and optimizer
-    model = CVAEv2(device).to(device)
+    model = CVAEv3(device).to(device)
     if False:
         criterion = torch.nn.BCELoss()  # Binary Cross-Entropy Loss
         optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
