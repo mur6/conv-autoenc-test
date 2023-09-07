@@ -218,15 +218,20 @@ class CVAE(nn.Module):
         )
 
     def reparametrizaion(self, mean, log_var, device):
-        eps = torch.randn(mean.shape).to(device)
-        return mean + torch.sqrt(log_var) * eps
+        eps = torch.randn_like(mean).to(device)
+        return mean + torch.exp(log_var / 2) * eps
 
     def forward(self, x):
         # x = x.view(-1, self.x_dim)
         x = self.encoder(x)
         mean, log_var = torch.chunk(x, 2, dim=1)
+        # print("mean=", mean)
+        # print("log_var=", log_var)
         # log_var = F.softplus(log_var)
+        # print("log_var=", log_var)
         # print(f"mean={mean.shape} log_var={log_var.shape}")
         z = self.reparametrizaion(mean, log_var, self.device)
+        # z = F.relu(z)
+        # print("z=", z)
         x_hat = self.decoder(z)  # 潜在ベクトルを入力して、再構築画像 y を出力
         return x_hat, z, mean, log_var
