@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+import torch.nn.functional as F
 
 
 class AutoEncoderV0(nn.Module):
@@ -224,6 +225,7 @@ class CVAE(nn.Module):
         # x = x.view(-1, self.x_dim)
         x = self.encoder(x)
         mean, log_var = torch.chunk(x, 2, dim=1)
+        # log_var = F.softplus(log_var)
         # print(f"mean={mean.shape} log_var={log_var.shape}")
         z = self.reparametrizaion(mean, log_var, self.device)
         x_hat = self.decoder(z)  # 潜在ベクトルを入力して、再構築画像 y を出力
