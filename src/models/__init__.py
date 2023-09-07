@@ -1,11 +1,22 @@
 from torch import nn
 
 
-class AutoEncoder2(torch.nn.Module):
+class AutoEncoderV0(nn.Module):
     def __init__(self, enc, dec):
         super().__init__()
-        self.enc = enc
-        self.dec = dec
+        self.enc = nn.Sequential(
+            nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
+            nn.ReLU(),
+            # nn.MaxPool2d(2),
+            nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
+            nn.ReLU(),
+        )
+        self.dec = nn.Sequential(
+            nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
+            nn.ReLU(),
+            nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
+            nn.Tanh(),
+        )
 
     def forward(self, x):
         x = self.enc(x)
@@ -13,30 +24,9 @@ class AutoEncoder2(torch.nn.Module):
         return x
 
 
-def test():
-
-
-    enc = torch.nn.Sequential(
-        torch.nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
-        torch.nn.ReLU(),
-        # torch.nn.MaxPool2d(2),
-        torch.nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
-        torch.nn.ReLU(),
-    )
-    # print("init:", x.shape)
-    # x = enc(x)
-    # print("after 2nd pool:", x.shape)
-    dec = torch.nn.Sequential(
-        torch.nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
-        torch.nn.ReLU(),
-        torch.nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
-        torch.nn.Tanh(),
-    )
-
-
 class AutoencoderV1(nn.Module):
     def __init__(self):
-        super(Autoencoder, self).__init__()
+        super(AutoencoderV1, self).__init__()
 
         # Encoder layers
         self.encoder = nn.Sequential(
@@ -84,9 +74,9 @@ class AutoencoderV1(nn.Module):
         return x
 
 
-class Autoencoder(nn.Module):
+class AutoencoderV2(nn.Module):
     def __init__(self):
-        super(Autoencoder, self).__init__()
+        super(AutoencoderV2, self).__init__()
 
         # Encoder layers
         self.encoder = nn.Sequential(
