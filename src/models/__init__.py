@@ -2,7 +2,7 @@ from torch import nn
 
 
 class AutoEncoderV0(nn.Module):
-    def __init__(self, enc, dec):
+    def __init__(self):
         super().__init__()
         self.enc = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
