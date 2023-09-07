@@ -128,7 +128,7 @@ class AutoencoderV2(nn.Module):
 class AutoEncoderV4(nn.Module):
     def __init__(self):
         super().__init__()
-        latent_dim = 8
+        latent_dim = 16
         self.enc = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
             nn.ReLU(),
