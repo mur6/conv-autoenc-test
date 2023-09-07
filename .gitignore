@@ -12,3 +12,4 @@ data/cifar-10-batches-py/
 data/*.tar.gz
 data/simple-rectangle/POLYGON_TENSOR.pt
 checkpoints/vae/*.pth
+checkpoints/cvae/*.pth
