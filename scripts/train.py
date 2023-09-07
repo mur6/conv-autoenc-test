@@ -16,7 +16,7 @@ import torchvision.transforms as T
 from torchvision.transforms import v2
 import torchvision.transforms.v2 as transforms
 
-from src.models import AutoEncoderV4, AutoEncoderV5, CVAE
+from src.models import AutoEncoderV4, AutoEncoderV5, CVAE, CVAEv2
 
 
 def imshow(img):
@@ -107,7 +107,7 @@ def main():
     epochs = 500
 
     # Initialize the autoencoder and optimizer
-    model = CVAE(device).to(device)
+    model = CVAEv2(device).to(device)
     if False:
         criterion = torch.nn.BCELoss()  # Binary Cross-Entropy Loss
         optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
