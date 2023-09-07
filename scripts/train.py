@@ -15,7 +15,7 @@ import torchvision.transforms as T
 from torchvision.transforms import v2
 import torchvision.transforms.v2 as transforms
 
-from src.models import AutoEncoderV4, AutoEncoderV5
+from src.models import AutoEncoderV4, AutoEncoderV5, CVAE
 
 
 def imshow(img):

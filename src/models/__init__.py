@@ -189,9 +189,10 @@ class AutoEncoderV5(nn.Module):
         return x
 
 
-class AutoEncoderV6(nn.Module):
-    def __init__(self):
+class CVAE(nn.Module):
+    def __init__(self, device):
         super().__init__()
+        self.device = device
         latent_dim = 8
         self.encoder = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
@@ -220,11 +221,11 @@ class AutoEncoderV6(nn.Module):
         return mean + torch.sqrt(log_var) * eps
 
 
-    def forward(self, x, device):
+    def forward(self, x):
         # x = x.view(-1, self.x_dim)
         x = self.encoder(x)
         mean, log_var = torch.chunk(x, 2, dim=1)
         # print(f"mean={mean.shape} log_var={log_var.shape}")
-        z = self.reparametrizaion(mean, log_var, device)
+        z = self.reparametrizaion(mean, log_var, self.device)
         x_hat = self.decoder(z)  # 潜在ベクトルを入力して、再構築画像 y を出力
         return x_hat, z, mean, log_var
