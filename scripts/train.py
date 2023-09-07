@@ -15,7 +15,7 @@ import torchvision.transforms as T
 from torchvision.transforms import v2
 import torchvision.transforms.v2 as transforms
 
-from src.models import Autoencoder
+from src.models import AutoEncoderV4
 
 
 def imshow(img):
@@ -106,7 +106,7 @@ def main():
     epochs = 250
 
     # Initialize the autoencoder and optimizer
-    model = Autoencoder().to(device)
+    model = AutoEncoderV4().to(device)
     # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     # criterion = nn.BCELoss()  # Binary Cross-Entropy Loss
     criterion = torch.nn.MSELoss()

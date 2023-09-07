@@ -122,3 +122,36 @@ class AutoencoderV2(nn.Module):
         # print(f"x={x.shape}")
         x = self.decoder(x)
         return x
+
+
+
+class AutoEncoderV4(nn.Module):
+    def __init__(self):
+        super().__init__()
+        latent_dim = 8
+        self.enc = nn.Sequential(
+            nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
+            nn.ReLU(),
+            nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
+            nn.ReLU(),
+            nn.Conv2d(32, 64, kernel_size=4, padding=1, stride=2),
+            nn.ReLU(),
+            nn.Flatten(),
+            nn.Linear(12 * 12 * 64, latent_dim)
+        )
+        self.dec = nn.Sequential(
+            nn.Linear(latent_dim, 12 * 12 * 64),
+            nn.ReLU(),
+            nn.Unflatten(1, (64, 12, 12)),
+            nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1),
+            nn.ReLU(),
+            nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
+            nn.ReLU(),
+            nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
+            nn.Tanh(),
+        )
+
+    def forward(self, x):
+        x = self.enc(x)
+        x = self.dec(x)
+        return x
