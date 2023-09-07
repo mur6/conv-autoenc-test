@@ -2,6 +2,8 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
+from src.models import CVAEv2
+
 
 class AutoEncoderV6(nn.Module):
     def __init__(self):
@@ -46,9 +48,9 @@ class AutoEncoderV6(nn.Module):
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     x = torch.rand(8, 1, 96, 96)
-    model = AutoEncoderV6()
-    enc = model.encoder
-    output, z, ave, log_dev = model(x, device)
+    model = CVAEv2(device)
+    # enc = model.encoder
+    output, z, ave, log_dev = model(x)
     print(f"output={output.shape} z={z.shape}")
     # x = model.encoder(x)
     # mean, logvar = torch.chunk(x, 2, dim=1)
