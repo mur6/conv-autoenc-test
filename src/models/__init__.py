@@ -294,8 +294,6 @@ class CVAEv3(nn.Module):
             nn.ReLU(),
             nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
             nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=4, padding=1, stride=2),
-            nn.ReLU(),
             nn.Flatten(),
             nn.Linear(64 * 12 * 12, latent_dim * 2),
         )
@@ -303,8 +301,6 @@ class CVAEv3(nn.Module):
             nn.Linear(latent_dim, 12 * 12 * 64),
             nn.ReLU(),
             nn.Unflatten(1, (64, 12, 12)),
-            nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1),
-            nn.ReLU(),
             nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
             nn.ReLU(),
             nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
