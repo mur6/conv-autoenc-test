@@ -13,3 +13,4 @@ data/*.tar.gz
 data/simple-rectangle/POLYGON_TENSOR.pt
 checkpoints/vae/*.pth
 checkpoints/cvae/*.pth
+checkpoints/temp/*.pth
