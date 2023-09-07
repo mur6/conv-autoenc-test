@@ -288,7 +288,7 @@ class CVAEv3(nn.Module):
     def __init__(self, device):
         super().__init__()
         self.device = device
-        latent_dim = 16
+        latent_dim = 8
         self.encoder = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
             nn.ReLU(),
