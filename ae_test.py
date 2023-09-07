@@ -5,7 +5,6 @@ import torch.nn.functional as F
 from src.models import CVAEv2, CVAEv3
 
 
-
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     x = torch.rand(8, 1, 32, 32)

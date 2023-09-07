@@ -49,12 +49,25 @@ def main():
             A.CoarseDropout(
                 max_holes=50, max_height=1, max_width=1, fill_value=0, p=0.9
             ),
-            A.OneOf([
-                A.Cutout(num_holes=4, max_h_size=DROP_SIZE, max_w_size=DROP_SIZE, fill_value=0, p=0.75),
-                A.CoarseDropout(
-                    max_holes=12, max_height=DROP_SIZE, max_width=DROP_SIZE, fill_value=0, p=0.9
-                ),
-            ], p=0.95),
+            A.OneOf(
+                [
+                    A.Cutout(
+                        num_holes=4,
+                        max_h_size=DROP_SIZE,
+                        max_w_size=DROP_SIZE,
+                        fill_value=0,
+                        p=0.75,
+                    ),
+                    A.CoarseDropout(
+                        max_holes=12,
+                        max_height=DROP_SIZE,
+                        max_width=DROP_SIZE,
+                        fill_value=0,
+                        p=0.9,
+                    ),
+                ],
+                p=0.95,
+            ),
             # .Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             ToTensorV2(),
         ]
