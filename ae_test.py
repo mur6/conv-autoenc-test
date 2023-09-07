@@ -33,7 +33,6 @@ class AutoEncoderV6(nn.Module):
         eps = torch.randn(mean.shape).to(device)
         return mean + torch.sqrt(log_var) * eps
 
-
     def forward(self, x, device):
         # x = x.view(-1, self.x_dim)
         x = self.encoder(x)
@@ -57,5 +56,6 @@ def main():
     # #print(f"out={out.shape}")
     # print(f"mean={mean.shape} log_var={log_var.shape}")
     # z = reparametrizaion(mean, log_var)
+
 
 main()

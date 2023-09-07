@@ -220,7 +220,6 @@ class CVAE(nn.Module):
         eps = torch.randn(mean.shape).to(device)
         return mean + torch.sqrt(log_var) * eps
 
-
     def forward(self, x):
         # x = x.view(-1, self.x_dim)
         x = self.encoder(x)

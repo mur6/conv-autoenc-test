@@ -1,10 +1,11 @@
 from pathlib import Path
 
 import torch
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
 import torchvision
-
 from torch.utils.data import Dataset, DataLoader
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -26,6 +27,13 @@ def imshow(img):
     plt.show()
 
 
+def criterion(predict, target, ave, log_dev):
+    bce_loss = F.binary_cross_entropy(predict, target, reduction="sum")
+    kl_loss = -0.5 * torch.sum(1 + log_dev - ave**2 - log_dev.exp())
+    loss = bce_loss + kl_loss
+    return loss
+
+
 def train(net, criterion, optimizer, epochs, trainloader):
     losses = []
     output_and_label = []
@@ -39,7 +47,7 @@ def train(net, criterion, optimizer, epochs, trainloader):
             # print(f"img={img.shape} {img.dtype}")
             # print(f"output_image={output_image.shape} {output_image.dtype}")
             optimizer.zero_grad()
-            output = net(img)
+            output, z, ave, log_dev = net(img)
             loss = criterion(output, output_image)
             loss.backward()
             optimizer.step()
@@ -106,10 +114,12 @@ def main():
     epochs = 250
 
     # Initialize the autoencoder and optimizer
-    model = AutoEncoderV5().to(device)
-    # criterion = torch.nn.BCELoss()  # Binary Cross-Entropy Loss
-    criterion = torch.nn.MSELoss()
-    # optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    model = CVAE(device).to(device)
+    if False:
+        criterion = torch.nn.BCELoss()  # Binary Cross-Entropy Loss
+        optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    if False:
+        criterion = torch.nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
     # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.6)
@@ -127,11 +137,10 @@ def main():
             label_img = label_img.to(device)
             # print(f"img={img.shape} {img.dtype}")
             # print(f"output_image={label_img.shape} {label_img.dtype}")
-
-            # Forward pass
-            output = model(img)
+            output, z, ave, log_dev = model(img)
             # print(f"output={output.shape} {output.dtype}")
-            loss = criterion(output, label_img)
+            # loss = criterion(output, label_img)
+            loss = criterion(output, label_img, ave, log_dev)
 
             # Backpropagation and optimization
             optimizer.zero_grad()
