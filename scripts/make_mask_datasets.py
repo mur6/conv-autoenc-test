@@ -57,6 +57,8 @@ def main():
 
     image_list = list(_iter())
     images = torch.cat(image_list, dim=0)
+    images = (images > 0.5).float()
+
     p = Path("data/simple-rectangle") / "argumented_masks_32x32.pt"
     torch.save(images, p)
     print(f"argumented masks saved! {images.shape}")
