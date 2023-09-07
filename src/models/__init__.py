@@ -295,12 +295,12 @@ class CVAEv3(nn.Module):
             nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
             nn.ReLU(),
             nn.Flatten(),
-            nn.Linear(64 * 12 * 12, latent_dim * 2),
+            nn.Linear(32 * 8 * 8, latent_dim * 2),
         )
         self.decoder = nn.Sequential(
-            nn.Linear(latent_dim, 12 * 12 * 64),
+            nn.Linear(latent_dim, 8 * 8 * 32),
             nn.ReLU(),
-            nn.Unflatten(1, (64, 12, 12)),
+            nn.Unflatten(1, (32, 8, 8)),
             nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
             nn.ReLU(),
             nn.ConvTranspose2d(16, 1, kernel_size=4, stride=2, padding=1),
