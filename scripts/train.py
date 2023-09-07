@@ -103,7 +103,7 @@ def main():
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
 
     # Set up training parameters
-    learning_rate = 0.012
+    learning_rate = 0.014
     epochs = 250
 
     # Initialize the autoencoder and optimizer
@@ -122,7 +122,7 @@ def main():
 
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
-    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.6)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.96)
 
     # Create a directory to save checkpoints
     checkpoint_dir = Path("checkpoints")
