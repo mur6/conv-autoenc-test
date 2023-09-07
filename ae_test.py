@@ -1,12 +1,13 @@
 import torch
 from torch import nn
+import torch.nn.functional as F
 
 
 class AutoEncoderV0(nn.Module):
     def __init__(self):
         super().__init__()
-        latent_dim = 16
-        self.enc = nn.Sequential(
+        latent_dim = 8 * 2
+        self.encoder = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
             nn.ReLU(),
             nn.Conv2d(16, 32, kernel_size=4, padding=1, stride=2),
@@ -29,7 +30,7 @@ class AutoEncoderV0(nn.Module):
         )
 
     def forward(self, x):
-        x = self.enc(x)
+        x = self.encoder(x)
         x = self.dec(x)
         return x
 
@@ -37,9 +38,13 @@ class AutoEncoderV0(nn.Module):
 def main():
     x = torch.rand(8, 1, 96, 96)
     model = AutoEncoderV0()
-    enc = model.enc
-    out = model(x)
-    print(f"out={out.shape}")
+    # enc = model.encoder
+    # out = model(x)
+    x = model.encoder(x)
+    mean, logvar = torch.chunk(x, 2, dim=1)
+    logvar = F.softplus(logvar)
+    #print(f"out={out.shape}")
+    print(f"mean={mean.shape} logvar={logvar.shape}")
 
 
 main()
