@@ -274,7 +274,7 @@ class CVAEv2(nn.Module):
         mean, log_var = torch.chunk(x, 2, dim=1)
         # print("mean=", mean)
         # print("log_var=", log_var)
-        log_var = F.softplus(log_var)
+        # log_var = F.softplus(log_var)
         # print("log_var=", log_var)
         # print(f"mean={mean.shape} log_var={log_var.shape}")
         z = self.reparametrizaion(mean, log_var, self.device)
