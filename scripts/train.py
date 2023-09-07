@@ -158,7 +158,7 @@ def main():
 
         # Save checkpoint every epoch
         if (epoch + 1) % 10 == 0:
-            checkpoint_path = checkpoint_dir / f"autoencoder_epoch{epoch + 1}.pth"
+            checkpoint_path = checkpoint_dir / f"cvae_v2_epoch{epoch + 1}.pth"
             torch.save(model.state_dict(), checkpoint_path)
             print(f"Saved: {checkpoint_path}")
 
