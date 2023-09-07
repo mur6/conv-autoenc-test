@@ -1,8 +1,6 @@
 from torch import nn
 
 
-
-
 class AutoEncoder2(torch.nn.Module):
     def __init__(self, enc, dec):
         super().__init__()
@@ -15,22 +13,8 @@ class AutoEncoder2(torch.nn.Module):
         return x
 
 
-
-
 def test():
-    train_transform = A.Compose(
-        [
-            A.Cutout(num_holes=4, max_h_size=16, max_w_size=16, fill_value=0, p=0.75),
-            A.CoarseDropout(
-                max_holes=12, max_height=16, max_width=16, fill_value=0, p=0.6
-            ),
-            # .Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-            ToTensorV2(),
-        ]
-    )
-    datasets = MaskDataset(train_transform)
-    batch_size = 32
-    train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
+
 
     enc = torch.nn.Sequential(
         torch.nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
@@ -50,8 +34,7 @@ def test():
     )
 
 
-
-class Autoencoder(nn.Module):
+class AutoencoderV1(nn.Module):
     def __init__(self):
         super(Autoencoder, self).__init__()
 
@@ -72,38 +55,26 @@ class Autoencoder(nn.Module):
             nn.BatchNorm2d(128),
             nn.ReLU(),
         )
-
-        # Decoder layers
-        # self.decoder = nn.Sequential(
-        #     nn.ConvTranspose2d(128, 64, kernel_size=3, stride=2, padding=1),
-        #     nn.ReLU(),
-        #     # nn.Upsample(scale_factor=2, mode='bilinear'),
-        #     nn.ConvTranspose2d(
-        #         64, 32, kernel_size=3, stride=2),
-        #     nn.ReLU(),
-        #     nn.Upsample(scale_factor=2, mode='bilinear'),
-        #     # nn.ConvTranspose2d(
-        #     #     32, 1, kernel_size=3, stride=2
-        #     # ),
-        #     nn.Sigmoid(),  # Output values between 0 and 1 for binary images
-        # )
         self.decoder = nn.Sequential(
             # conv 4
-            nn.ConvTranspose2d(in_channels=128, out_channels=64,
-                               kernel_size=3, stride=1, padding=2),
+            nn.ConvTranspose2d(
+                in_channels=128, out_channels=64, kernel_size=3, stride=1, padding=2
+            ),
             nn.BatchNorm2d(64),
             nn.ReLU(),
             # conv 5
-            nn.Upsample(scale_factor=2, mode='bilinear'),
-            nn.ConvTranspose2d(in_channels=64, out_channels=32,
-                               kernel_size=3, stride=1, padding=2),
+            nn.Upsample(scale_factor=2, mode="bilinear"),
+            nn.ConvTranspose2d(
+                in_channels=64, out_channels=32, kernel_size=3, stride=1, padding=2
+            ),
             nn.BatchNorm2d(32),
             nn.ReLU(),
             # conv 6 out
-            nn.Upsample(scale_factor=2, mode='bilinear'),
-            nn.ConvTranspose2d(in_channels=32, out_channels=1,
-                               kernel_size=3, stride=1, padding=1),
-            nn.Softmax()
+            nn.Upsample(scale_factor=2, mode="bilinear"),
+            nn.ConvTranspose2d(
+                in_channels=32, out_channels=1, kernel_size=3, stride=1, padding=1
+            ),
+            nn.Softmax(),
         )
 
     def forward(self, x):
@@ -111,7 +82,6 @@ class Autoencoder(nn.Module):
         # print(f"x={x.shape}")
         x = self.decoder(x)
         return x
-
 
 
 class Autoencoder(nn.Module):
