@@ -5,7 +5,7 @@ MASK_SIZE = 32
 DROP_SIZE = int(MASK_SIZE * 0.1666)
 
 
-train_transform = A.Compose(
+train_transform_complicated = A.Compose(
     [
         A.CoarseDropout(max_holes=50, max_height=1, max_width=1, fill_value=0, p=0.9),
         A.OneOf(
@@ -27,7 +27,23 @@ train_transform = A.Compose(
             ],
             p=0.95,
         ),
-        # .Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+        ToTensorV2(),
+    ]
+)
+
+train_transform = A.Compose(
+    [
+        A.OneOf(
+            [
+                A.CoarseDropout(
+                    max_holes=100, max_height=1, max_width=1, fill_value=0, p=0.95
+                ),
+                A.CoarseDropout(
+                    max_holes=50, max_height=1, max_width=1, fill_value=0, p=0.95
+                ),
+            ],
+            p=0.95,
+        ),
         ToTensorV2(),
     ]
 )
