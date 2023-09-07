@@ -107,10 +107,10 @@ def main():
 
     # Initialize the autoencoder and optimizer
     model = AutoEncoderV4().to(device)
-    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     criterion = torch.nn.BCELoss()  # Binary Cross-Entropy Loss
     # criterion = torch.nn.MSELoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    # optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     # scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.1)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.6)
 
@@ -150,7 +150,7 @@ def main():
             torch.save(model.state_dict(), checkpoint_path)
             print(f"Saved: {checkpoint_path}")
 
-        print(f"Epoch [{epoch + 1}/{epochs}] Loss: {total_loss / len(train_loader)}")
+        print(f"Epoch [{epoch + 1}/{epochs}] Loss: {total_loss / len(train_loader)} {scheduler.get_last_lr()}")
         scheduler.step()
     print("Training finished.")
 
