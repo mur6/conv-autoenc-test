@@ -121,12 +121,13 @@ def main():
         return loss
 
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
-    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=4, gamma=0.95)
+    # scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.95)
 
     # Create a directory to save checkpoints
     checkpoint_dir = Path("checkpoints")
     checkpoint_dir.mkdir(exist_ok=True)
+    (checkpoint_dir / "cvae").mkdir(exist_ok=True)
 
     # Training loop
     for epoch in range(epochs):
@@ -157,8 +158,8 @@ def main():
         # print(f"loss:", avg_loss)
 
         # Save checkpoint every epoch
-        if (epoch + 1) % 10 == 0:
-            checkpoint_path = checkpoint_dir / f"cvae_v2_epoch{epoch + 1}.pth"
+        if (epoch + 1) % 50 == 0:
+            checkpoint_path = checkpoint_dir / "cvae" / f"cvae_v3_epoch{epoch + 1}.pth"
             torch.save(model.state_dict(), checkpoint_path)
             print(f"Saved: {checkpoint_path}")
 
