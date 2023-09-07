@@ -25,7 +25,7 @@ sample_image_path = "../poetry-test-proj/samples/02"
 class MaskDataset(Dataset):
     def __init__(self, transform=None):
         # self.images_filepaths = list(Path(images_folder).glob("*.jpeg"))
-        p = Path("data/simple-rectangle") / "argumented_masks.pt"
+        p = Path("data/simple-rectangle") / "argumented_masks_32x32.pt"
         self.masks = torch.load(p).numpy()
         self.transform = transform
 

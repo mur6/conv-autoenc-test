@@ -19,8 +19,12 @@ import torchvision.transforms as T
 from torchvision.transforms import v2
 
 
+SIZE = 32
+
+resize_transform = v2.Resize((SIZE, SIZE))
+
 transforms = v2.Compose(
-    [v2.RandomZoomOut(side_range=(1, 2.5), p=1.0), v2.Resize((96, 96))]
+    [v2.RandomZoomOut(side_range=(1, 2.5), p=1.0), v2.Resize((SIZE, SIZE))]
 )
 
 # def test():
@@ -44,6 +48,7 @@ def augments_data(orig_img):
 
 def main():
     masks = torch.load("data/simple-rectangle/MASKS_TENSOR.pt")
+    masks = resize_transform(masks)
 
     def _iter():
         for orig_img in masks:
@@ -52,7 +57,7 @@ def main():
 
     image_list = list(_iter())
     images = torch.cat(image_list, dim=0)
-    p = Path("data/simple-rectangle") / "argumented_masks.pt"
+    p = Path("data/simple-rectangle") / "argumented_masks_32x32.pt"
     torch.save(images, p)
     print(f"argumented masks saved! {images.shape}")
     show_result = False
