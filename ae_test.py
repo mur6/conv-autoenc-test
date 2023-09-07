@@ -5,7 +5,7 @@ from torch import nn
 class AutoEncoderV0(nn.Module):
     def __init__(self):
         super().__init__()
-        latent_dim = 8
+        latent_dim = 16
         self.enc = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=4, padding=1, stride=2),
             nn.ReLU(),
@@ -14,12 +14,12 @@ class AutoEncoderV0(nn.Module):
             # nn.Conv2d(32, 64, kernel_size=4, padding=1, stride=2),
             # nn.ReLU(),
             nn.Flatten(),
-            nn.Linear(12 * 12 * 64, latent_dim)
+            nn.Linear(24 * 24 * 32, latent_dim)
         )
         self.dec = nn.Sequential(
-            nn.Linear(latent_dim, 12 * 12 * 64),
+            nn.Linear(latent_dim, 24 * 24 * 32),
             nn.ReLU(),
-            nn.Unflatten(1, (64, 12, 12)),
+            nn.Unflatten(1, (32, 24, 24)),
             # nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1),
             # nn.ReLU(),
             nn.ConvTranspose2d(32, 16, kernel_size=4, stride=2, padding=1),
