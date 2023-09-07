@@ -17,6 +17,7 @@ from torchvision.transforms import v2
 import torchvision.transforms.v2 as transforms
 
 from src.models import AutoEncoderV4, AutoEncoderV5, CVAEv2, CVAEv3
+from src.augmenting import train_transform
 
 
 def imshow(img):
@@ -84,17 +85,6 @@ def old_train():
 
 
 def main():
-    train_transform = A.Compose(
-        [
-            A.Cutout(num_holes=4, max_h_size=16, max_w_size=16, fill_value=0, p=0.75),
-            A.CoarseDropout(
-                max_holes=12, max_height=16, max_width=16, fill_value=0, p=0.6
-            ),
-            # .Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-            ToTensorV2(),
-        ]
-    )
-
     datasets = MaskDataset(train_transform)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
