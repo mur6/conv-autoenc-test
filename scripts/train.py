@@ -27,13 +27,6 @@ def imshow(img):
     plt.show()
 
 
-def criterion(predict, target, ave, log_dev):
-    bce_loss = F.binary_cross_entropy(predict, target, reduction="sum")
-    kl_loss = -0.5 * torch.sum(1 + log_dev - ave**2 - log_dev.exp())
-    loss = bce_loss + kl_loss
-    return loss
-
-
 def train(net, criterion, optimizer, epochs, trainloader):
     losses = []
     output_and_label = []
@@ -106,11 +99,11 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    batch_size = 128
+    batch_size = 8
     train_loader = DataLoader(datasets, batch_size=batch_size, shuffle=True)
 
     # Set up training parameters
-    learning_rate = 0.5
+    learning_rate = 0.012
     epochs = 250
 
     # Initialize the autoencoder and optimizer
@@ -120,8 +113,15 @@ def main():
         optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
     if False:
         criterion = torch.nn.MSELoss()
+
+    def criterion(predict, target, ave, log_dev):
+        bce_loss = F.binary_cross_entropy(predict, target, reduction="sum")
+        kl_loss = -0.5 * torch.sum(1 + log_dev - ave**2 - log_dev.exp())
+        loss = bce_loss + kl_loss
+        return loss
+
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
+    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
     # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.6)
 
     # Create a directory to save checkpoints
@@ -138,7 +138,10 @@ def main():
             # print(f"img={img.shape} {img.dtype}")
             # print(f"output_image={label_img.shape} {label_img.dtype}")
             output, z, ave, log_dev = model(img)
-            # print(f"output={output.shape} {output.dtype}")
+            # print(f"output={output.shape} label_img={label_img.shape}")
+            # print(torch.max(output), torch.min(output))
+            # print(torch.max(label_img), torch.min(label_img))
+
             # loss = criterion(output, label_img)
             loss = criterion(output, label_img, ave, log_dev)
 
