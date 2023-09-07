@@ -104,7 +104,7 @@ def main():
 
     # Set up training parameters
     learning_rate = 0.01
-    epochs = 250
+    epochs = 500
 
     # Initialize the autoencoder and optimizer
     model = CVAE(device).to(device)
