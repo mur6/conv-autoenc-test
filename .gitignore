@@ -14,3 +14,5 @@ data/simple-rectangle/POLYGON_TENSOR.pt
 checkpoints/vae/*.pth
 checkpoints/cvae/*.pth
 checkpoints/temp/*.pth
+
+data/MNIST/raw/
