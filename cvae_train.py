@@ -75,6 +75,7 @@ def train_conv_autoencoder(net, criterion, optimizer, epochs, trainloader):
         print(f"epoch: {epoch}, ", end="")
         running_loss = 0.0
         for counter, (img, _) in enumerate(trainloader, 1):
+            img = img.cuda()
             # print(f"img={img.shape} {img.dtype}")
             # print(f"output_image={output_image.shape} {output_image.dtype}")
             optimizer.zero_grad()
