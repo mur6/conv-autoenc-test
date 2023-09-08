@@ -94,7 +94,7 @@ def train_conv_autoencoder(net, criterion, optimizer, epochs, trainloader):
 def main():
     trainloader, testloader = prepare_mnist_dataloaders()
     # show_sample_image(trainloader)
-    net = ConvAutoencoder()
+    net = ConvAutoencoder().cuda()
     # x = torch.randn(8, 1, 96, 96)
     # out = net(x)
     # print(out.shape)
